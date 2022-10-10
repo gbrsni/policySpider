@@ -64,9 +64,3 @@ class PolicySpider(scrapy.Spider):
 				link_to_policy = "https://" + domain + link_to_policy
 
 			save_policy_text(link_to_policy, policy_file_name)
-
-			# request =  scrapy.Request(url = link_to_policy, callback = self.save_policy_html)
-			# request =  scrapy.Request(url = link_to_policy)
-			
-			# print("Yielding")
-			# yield request
