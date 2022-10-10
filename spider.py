@@ -28,7 +28,14 @@ def save_policy_text(policy_url, file_name = "policy"):
 
 	f.write(output_text)
 
-	# TODO: Generate xpath selector from list of keywords
+def make_xpath_query(keywords):
+	query = "//a["
+	for i, keyword in enumerate(keywords):
+		if i != 0:
+			query += " or "
+		query += "contains(., '" + keyword +"')"
+	return query + "]/@href"
+
 
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
@@ -58,9 +65,8 @@ class PolicySpider(scrapy.Spider):
 
 		print("Parsing")
 
-		# link_to_policy = response.xpath("//a[contains(text(), 'Policy')]/@href").get()
-		link_to_policy = response.xpath("""//a[contains(., 'privacy')
-												or contains(., 'Policy')]/@href""").get()
+		# xpath structure "//a[contains(., 'privacy') or contains(., 'Policy')]/@href"
+		link_to_policy = response.xpath(make_xpath_query(["privacy", "Policy"])).get()
 		if link_to_policy is not None:
 			print("Found a link to a privacy policy at " + link_to_policy)
 
