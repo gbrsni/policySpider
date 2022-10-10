@@ -28,12 +28,6 @@ def save_policy_text(policy_url, file_name = "policy"):
 
 	f.write(output_text)
 
-# Assumes url starts with protocol identifier (ie "https://" et al)
-# Returns the whole domain (including subdomains, "www" ...)
-def get_domain_from_url(url):
-	domain = url.split('/')[2]
-	return domain
-
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
 	start_urls = ['https://corriere.it/']
@@ -58,9 +52,8 @@ class PolicySpider(scrapy.Spider):
 
 		print("Parsing")
 
-		domain = get_domain_from_url(response.request.url)
+		domain = (response.request.url).split('/')[2]
 		policy_file_name = "policy_" + domain
-		# print(domain)
 
 		link_to_policy = response.xpath("//a[contains(text(), 'Cookie')]/@href").get()
 		if link_to_policy is not None:
