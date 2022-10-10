@@ -28,6 +28,7 @@ def save_policy_text(policy_url, file_name = "policy"):
 		f = open(file_name, 'w')
 
 	f.write(output_text)
+	f.close()
 
 # xpath structure "//a[contains(., 'privacy') or contains(., 'Policy')]/@href"
 def make_xpath_query(keywords):
@@ -37,7 +38,6 @@ def make_xpath_query(keywords):
 			query += " or "
 		query += "contains(., '" + keyword +"')"
 	return query + "]/@href"
-
 
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
@@ -57,6 +57,7 @@ class PolicySpider(scrapy.Spider):
 
 		print("Saving html")
 		f.write(response.css('*').get())
+		f.close()
 
 	def parse(self, response):
 		domain = (response.request.url).split('/')[2]
