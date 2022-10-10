@@ -59,7 +59,7 @@ class PolicySpider(scrapy.Spider):
 		print("Parsing")
 
 		domain = get_domain_from_url(response.request.url)
-		policy_file_name = 
+		policy_file_name = "policy_" + domain
 		# print(domain)
 
 		link_to_policy = response.xpath("//a[contains(text(), 'Cookie')]/@href").get()
@@ -67,8 +67,10 @@ class PolicySpider(scrapy.Spider):
 			print("Found a link to a privacy policy")
 			link_to_policy = 'https:' + link_to_policy
 
-			save_policy_text(link_to_policy)
+			save_policy_text(link_to_policy, policy_file_name)
 
-			request =  scrapy.Request(url = link_to_policy, callback = self.save_policy_html)
+			# request =  scrapy.Request(url = link_to_policy, callback = self.save_policy_html)
+			request =  scrapy.Request(url = link_to_policy)
+			
 			print("Yielding")
 			yield request
