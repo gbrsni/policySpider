@@ -65,8 +65,8 @@ class PolicySpider(scrapy.Spider):
 				link_to_policy = "https:" + link_to_policy
 			elif link_to_policy.startswith(domain):
 				link_to_policy = "https://" + link_to_policy
-			elif not (link_to_policy.startswith("http://" + domain)
-					or link_to_policy.startswith("https://" + domain)):
+			elif not (link_to_policy.startswith("http://")
+					or link_to_policy.startswith("https://")):
 				link_to_policy = "https://" + domain + link_to_policy
 
 			save_policy_text(link_to_policy, policy_file_name)
