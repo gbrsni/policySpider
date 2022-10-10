@@ -6,8 +6,8 @@ import scrapy
 DATADIR = "data/"
 
 # Saves the policy found at the given URL to a text file with name file_name (default "policy.txt") inside DATADIR
-def save_policy_text(policy_url, file_name = "policy.txt"):
-	file_name = DATADIR + file_name
+def save_policy_text(policy_url, file_name = "policy"):
+	file_name = DATADIR + file_name + ".txt"
 
 	print("Saving policy text to", file_name)
 
@@ -38,8 +38,8 @@ class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
 	start_urls = ['https://corriere.it/']
 
-	def save_policy_html(self, response, file_name = "policy.html"):
-		file_name = DATADIR + file_name
+	def save_policy_html(self, response, file_name = "policy"):
+		file_name = DATADIR + file_name + ".html"
 
 		try:
 			f = open(file_name, 'x')
@@ -59,7 +59,7 @@ class PolicySpider(scrapy.Spider):
 		print("Parsing")
 
 		domain = get_domain_from_url(response.request.url)
-		file_name = 
+		policy_file_name = 
 		# print(domain)
 
 		link_to_policy = response.xpath("//a[contains(text(), 'Cookie')]/@href").get()
