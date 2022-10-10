@@ -28,6 +28,8 @@ def save_policy_text(policy_url, file_name = "policy"):
 
 	f.write(output_text)
 
+	# TODO: Generate xpath selector from list of keywords
+
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
 	start_urls = ["https://corriere.it/", "https://unieuro.it/", "https://lercio.it/"]
