@@ -30,7 +30,7 @@ def save_policy_text(policy_url, file_name = "policy"):
 
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
-	start_urls = ['https://unieuro.it/']
+	start_urls = ['https://corriere.it/']
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
@@ -55,12 +55,15 @@ class PolicySpider(scrapy.Spider):
 		domain = (response.request.url).split('/')[2]
 		policy_file_name = "policy_" + domain
 
-		link_to_policy = response.xpath("//a[contains(text(), 'Policy')]/@href").get()
+		# link_to_policy = response.xpath("//a[contains(text(), 'Policy')]/@href").get()
+		link_to_policy = response.xpath("//a[contains(., 'privacy')]/@href").get()
 		if link_to_policy is not None:
-			print("Found a link to a privacy policy")
+			print("Found a link to a privacy policy at " + link_to_policy)
 
 			# Used if the link is a relative path
-			if not link_to_policy.startswith(domain):
+			if link_to_policy.startswith("//"):
+				link_to_policy = "https:" + link_to_policy
+			elif not link_to_policy.startswith(domain):
 				link_to_policy = "https://" + domain + link_to_policy
 
 			save_policy_text(link_to_policy, policy_file_name)
