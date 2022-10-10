@@ -60,13 +60,11 @@ class PolicySpider(scrapy.Spider):
 		if link_to_policy is not None:
 			print("Found a link to a privacy policy at " + link_to_policy)
 
-			# Used if the link is a relative path
-			if link_to_policy.startswith("//"):
+			if link_to_policy.startswith("//"): # Some websites do this for some reason
 				link_to_policy = "https:" + link_to_policy
-			elif link_to_policy.startswith(domain):
+			elif link_to_policy.startswith(domain): # Add https:// if protocol isn't specified
 				link_to_policy = "https://" + link_to_policy
-			elif not (link_to_policy.startswith("http://")
-					or link_to_policy.startswith("https://")):
+			elif link_to_policy.startswith("/"): # If relathive path is used
 				link_to_policy = "https://" + domain + link_to_policy
 
 			save_policy_text(link_to_policy, policy_file_name)
