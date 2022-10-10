@@ -2,6 +2,7 @@ import justext
 import os
 import requests
 import scrapy
+import json
 
 DATADIR = "data/"
 
@@ -28,6 +29,7 @@ def save_policy_text(policy_url, file_name = "policy"):
 
 	f.write(output_text)
 
+# xpath structure "//a[contains(., 'privacy') or contains(., 'Policy')]/@href"
 def make_xpath_query(keywords):
 	query = "//a["
 	for i, keyword in enumerate(keywords):
@@ -65,8 +67,10 @@ class PolicySpider(scrapy.Spider):
 
 		print("Parsing")
 
-		# xpath structure "//a[contains(., 'privacy') or contains(., 'Policy')]/@href"
-		link_to_policy = response.xpath(make_xpath_query(["privacy", "Policy"])).get()
+		keywords_file = open("resources/policy_keywords.json", 'r')
+		keywords_file_json = json.load(keywords_file)
+		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
+
 		if link_to_policy is not None:
 			print("Found a link to a privacy policy at " + link_to_policy)
 
