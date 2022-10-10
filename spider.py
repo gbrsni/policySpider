@@ -41,7 +41,11 @@ def make_xpath_query(keywords):
 
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
-	start_urls = ["https://corriere.it/", "https://unieuro.it/", "https://lercio.it/"]
+
+	websites_file = open("resources/websites.json", 'r')
+	websites_file_json = json.load(websites_file)
+	start_urls = websites_file_json["websites"]
+	websites_file.close()
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
@@ -70,6 +74,7 @@ class PolicySpider(scrapy.Spider):
 		keywords_file = open("resources/policy_keywords.json", 'r')
 		keywords_file_json = json.load(keywords_file)
 		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
+		keywords_file.close()
 
 		if link_to_policy is not None:
 			print("Found a link to a privacy policy at " + link_to_policy)
