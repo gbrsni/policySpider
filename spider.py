@@ -88,3 +88,9 @@ class PolicySpider(scrapy.Spider):
 				link_to_policy = "https://" + domain + link_to_policy
 
 			save_policy_text(link_to_policy, policy_file_name)
+
+			yield {
+				"domain" : domain,
+				"policy_domain" : "",
+				"policy_file" : policy_file_name
+			}
