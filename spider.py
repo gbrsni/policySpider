@@ -44,11 +44,14 @@ def make_xpath_query(keywords):
 	for i, keyword in enumerate(keywords):
 		if i != 0:
 			query += " or "
-		query += "contains(., '" + keyword +"')"
+		# query += "contains(., '" + keyword +"')"
+		query += "contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + keyword +"')" # This exists to make the query case insensitive
 	return query + "]/@href"
 
 # This is a one liner but having the function name improves readability
 def get_domain_from_url(url):
+	if url is None:
+		return ""
 	return url.split('/')[2]
 
 class PolicySpider(scrapy.Spider):
