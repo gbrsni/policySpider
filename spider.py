@@ -106,7 +106,7 @@ class PolicySpider(scrapy.Spider):
 			except NoPolicyError:
 				success = False
 		else:
-			success = false
+			success = False
 
 		yield {
 			"domain" : domain,
