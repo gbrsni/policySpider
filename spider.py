@@ -96,5 +96,6 @@ class PolicySpider(scrapy.Spider):
 			yield {
 				"domain" : domain,
 				"policy_domain" : get_domain_from_url(link_to_policy),
+				"policy_url" : link_to_policy,
 				"policy_file" : policy_file_name
 			}
