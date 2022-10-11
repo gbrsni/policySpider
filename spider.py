@@ -44,7 +44,6 @@ def make_xpath_query(keywords):
 	for i, keyword in enumerate(keywords):
 		if i != 0:
 			query += " or "
-		# query += "contains(., '" + keyword +"')"
 		query += "contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + keyword +"')" # This exists to make the query case insensitive
 	return query + "]/@href"
 
