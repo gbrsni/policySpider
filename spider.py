@@ -39,6 +39,10 @@ def make_xpath_query(keywords):
 		query += "contains(., '" + keyword +"')"
 	return query + "]/@href"
 
+# This is a one liner but having the function name improves readability
+def get_domain_from_url(url):
+	return url.split('/')[2]
+
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
 
@@ -60,7 +64,7 @@ class PolicySpider(scrapy.Spider):
 		f.close()
 
 	def parse(self, response):
-		domain = (response.request.url).split('/')[2]
+		domain = get_domain_from_url(response.request.url)
 		policy_file_name = "policy_" + domain
 		print("Examining " + domain)
 
