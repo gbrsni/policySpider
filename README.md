@@ -1,1 +1,1 @@
-run with `scrapy runspider spider.py`
+run with `scrapy runspider spider.py -O data/crawl_report.json`
