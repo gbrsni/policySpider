@@ -6,6 +6,11 @@ import json
 
 DATADIR = "data/"
 
+
+class NoPolicyError(Exception):
+	"""To be raised when no policy has been found"""
+	pass
+
 # Saves the policy found at the given URL to a text file with name file_name (default "policy.txt") inside DATADIR
 def save_policy_text(policy_url, file_name = "policy"):
 	file_name = DATADIR + file_name + ".txt"
@@ -21,6 +26,9 @@ def save_policy_text(policy_url, file_name = "policy"):
 	for paragraph in paragraphs:
 		if not paragraph.is_boilerplate:
 			output_text += paragraph.text + " "
+
+	if output_text == "" or output_text is None:
+		raise NoPolicyError("Couldn't find policy at " + policy_url)
 
 	try:
 		f = open(file_name, 'x')
@@ -80,6 +88,8 @@ class PolicySpider(scrapy.Spider):
 		keywords_file_json = json.load(keywords_file)
 		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
 		keywords_file.close()
+		
+		success = True
 
 		if link_to_policy is not None:
 			print("Found a link to a privacy policy at " + link_to_policy)
@@ -91,11 +101,17 @@ class PolicySpider(scrapy.Spider):
 			elif link_to_policy.startswith("/"): # If relathive path is used
 				link_to_policy = "https://" + domain + link_to_policy
 
-			save_policy_text(link_to_policy, policy_file_name)
+			try:
+				save_policy_text(link_to_policy, policy_file_name)
+			except NoPolicyError:
+				success = False
+		else:
+			success = false
 
-			yield {
-				"domain" : domain,
-				"policy_domain" : get_domain_from_url(link_to_policy),
-				"policy_url" : link_to_policy,
-				"policy_file" : policy_file_name
-			}
+		yield {
+			"domain" : domain,
+			"policy_domain" : get_domain_from_url(link_to_policy),
+			"policy_url" : link_to_policy,
+			"policy_file" : policy_file_name,
+			"success" : success
+		}
