@@ -54,12 +54,12 @@ def get_domain_from_url(url):
 	return url.split('/')[2]
 
 class PolicySpider(scrapy.Spider):
-	name = 'policyspider'
+	name = "policyspider"
 
 	custom_settings = {
-		'DEFAULT_REQUEST_HEADERS' : {
-			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-			'Accept-Language': 'it',
+		"DEFAULT_REQUEST_HEADERS" : {
+			"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+			"Accept-Language": "it",
 		}
 	}
 
