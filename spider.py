@@ -56,6 +56,13 @@ def get_domain_from_url(url):
 class PolicySpider(scrapy.Spider):
 	name = 'policyspider'
 
+	custom_settings = {
+		'DEFAULT_REQUEST_HEADERS' : {
+			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'Accept-Language': 'it',
+		}
+	}
+
 	websites_file = open("resources/websites.json", 'r')
 	websites_file_json = json.load(websites_file)
 	start_urls = websites_file_json["websites"]
