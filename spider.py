@@ -12,7 +12,7 @@ class NoPolicyError(Exception):
 	pass
 
 def save_policy_text(policy_url, file_name = "policy"):
-	"""Saves the policy found at the given URL to a text file with name file_name (default "policy.txt") inside DATADIR"""
+	"""Saves the policy found at the given URL to a text file with name file_name.txt (default "policy.txt") inside DATADIR"""
 	file_name = DATADIR + file_name + ".txt"
 
 	print("Saving policy text to", file_name)
