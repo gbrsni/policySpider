@@ -47,10 +47,10 @@ def make_xpath_query(keywords):
 		query += "contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + keyword +"')" # This exists to make the query case insensitive
 	return query + "]/@href"
 
-# This is a one liner but having the function name improves readability
 def get_domain_from_url(url):
-	if url is None:
-		return ""
+	"""Returns None if input is none or empty string"""
+	if url is None or url == "":
+		return None
 	return url.split('/')[2]
 
 class PolicySpider(scrapy.Spider):
@@ -93,7 +93,7 @@ class PolicySpider(scrapy.Spider):
 		
 		success = True
 
-		if link_to_policy is not None:
+		if link_to_policy is not None and link_to_policy != "javascript:void":
 			print("Found a link to a privacy policy at " + link_to_policy)
 
 			if link_to_policy.startswith("//"): # Some websites do this for some reason
@@ -106,8 +106,10 @@ class PolicySpider(scrapy.Spider):
 			try:
 				save_policy_text(link_to_policy, policy_file_name)
 			except NoPolicyError:
+				print("Error while pulling policy at " + link_to_policy)
 				success = False
 		else:
+			link_to_policy = None
 			success = False
 
 		yield {
