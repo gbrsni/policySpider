@@ -81,7 +81,8 @@ class PolicySpider(scrapy.Spider):
 		f.close()
 
 	def parse(self, response):
-		domain = get_domain_from_url(response.request.url)
+		current_url = response.request.url
+		domain = get_domain_from_url(current_url)
 		policy_file_name = "policy_" + domain
 		print("Examining " + domain)
 
@@ -121,7 +122,7 @@ class PolicySpider(scrapy.Spider):
 			success = False
 
 		yield {
-			"domain" : domain,
+			"url" : current_url,
 			"policy_domain" : get_domain_from_url(link_to_policy),
 			"policy_url" : link_to_policy,
 			"policy_file" : policy_file_name,
