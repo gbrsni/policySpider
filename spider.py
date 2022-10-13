@@ -98,7 +98,7 @@ class PolicySpider(scrapy.Spider):
 		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
 		keywords_file.close()
 		
-		success = True
+		success = False
 
 		if link_to_policy is not None and link_to_policy != "javascript:void":
 			print("Found a link to a privacy policy at " + link_to_policy)
@@ -112,6 +112,7 @@ class PolicySpider(scrapy.Spider):
 
 			try:
 				save_policy_text(link_to_policy, policy_file_name)
+				success = True
 			except NoPolicyError:
 				print("Error while pulling policy at " + link_to_policy)
 				success = False
