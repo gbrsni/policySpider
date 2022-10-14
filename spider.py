@@ -82,7 +82,7 @@ class PolicySpider(scrapy.Spider):
 	def parse(self, response):
 		current_url = response.request.url
 		domain = get_domain_from_url(current_url)
-		policy_file_name = "policy_" + domain
+		policy_file_name = "policy_" + domain + ".txt"
 		print("Examining " + domain)
 
 		print("Setting up data directory")
