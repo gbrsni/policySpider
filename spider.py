@@ -12,8 +12,8 @@ class NoPolicyError(Exception):
 	pass
 
 def save_policy_text(policy_url, file_name):
-	"""Saves the policy found at the given URL to a text file with name file_name.txt inside DATADIR"""
-	file_name = DATADIR + file_name + ".txt"
+	"""Saves the policy found at the given URL to a text file with name file_name inside DATADIR"""
+	file_name = DATADIR + file_name
 
 	print("Saving policy text to", file_name)
 
