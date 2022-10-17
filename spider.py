@@ -28,6 +28,8 @@ def save_policy_text(policy_url, file_name):
 
 	if output_text == "" or output_text is None:
 		raise NoPolicyError("Couldn't find policy at " + policy_url)
+	elif output_text.startswith("404 Not Found") or output_text.startswith("403 Forbidden"):
+		raise NoPolicyError("Bad policy at " + policy_url)
 
 	try:
 		f = open(file_name, 'x')
