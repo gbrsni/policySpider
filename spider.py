@@ -35,9 +35,9 @@ def save_policy_text(policy_url, file_name):
 		raise NoPolicyError("Bad policy at " + policy_url)
 
 	try:
-		f = open(file_name, 'x')
+		f = open(file_name, "x")
 	except FileExistsError:
-		f = open(file_name, 'w')
+		f = open(file_name, "w")
 
 	f.write(output_text)
 	f.close()
@@ -55,7 +55,7 @@ def get_domain_from_url(url):
 	"""Returns None if input is none or empty string"""
 	if url is None or url == "":
 		return None
-	return url.split('/')[2]
+	return url.split("/")[2]
 
 class PolicySpider(scrapy.Spider):
 	name = "policyspider"
@@ -67,7 +67,7 @@ class PolicySpider(scrapy.Spider):
 		}
 	}
 
-	websites_file = open("resources/websites.json", 'r')
+	websites_file = open("resources/websites.json", "r")
 	websites_file_json = json.load(websites_file)
 	start_urls = websites_file_json["websites"]
 	websites_file.close()
@@ -76,12 +76,12 @@ class PolicySpider(scrapy.Spider):
 		file_name = DATADIR + file_name + ".html"
 
 		try:
-			f = open(file_name, 'x')
+			f = open(file_name, "x")
 		except FileExistsError:
-			f = open(file_name, 'w')
+			f = open(file_name, "w")
 
 		print("Saving html")
-		f.write(response.css('*').get())
+		f.write(response.css("*").get())
 		f.close()
 
 	def parse(self, response):
@@ -98,7 +98,7 @@ class PolicySpider(scrapy.Spider):
 
 		print("Parsing")
 
-		keywords_file = open("resources/policy_keywords.json", 'r')
+		keywords_file = open("resources/policy_keywords.json", "r")
 		keywords_file_json = json.load(keywords_file)
 		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
 		keywords_file.close()
