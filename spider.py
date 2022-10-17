@@ -30,7 +30,8 @@ def save_policy_text(policy_url, file_name):
 		raise NoPolicyError("Couldn't find policy at " + policy_url)
 	elif output_text.startswith("404 Not Found") \
 		or output_text.startswith("403 Forbidden") \
-		or output_text.startswith("Forbidden"):
+		or output_text.startswith("Forbidden") \
+		or output_text.startswith("%PDF-1.5"):
 		raise NoPolicyError("Bad policy at " + policy_url)
 
 	try:
