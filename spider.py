@@ -4,7 +4,7 @@ import requests
 import scrapy
 import json
 
-DATADIR = "data/"
+DATADIR = "data"
 
 
 class NoPolicyError(Exception):
