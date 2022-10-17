@@ -7,7 +7,7 @@ import json
 DATADIR = "data"
 
 
-class NoPolicyError(Exception):
+class BadPolicyError(Exception):
 	"""To be raised when no policy has been found"""
 	pass
 
@@ -27,12 +27,16 @@ def save_policy_text(policy_url, file_name):
 		output_text += paragraph.text + " "
 
 	if output_text == "" or output_text is None:
-		raise NoPolicyError("Couldn't find policy at " + policy_url)
+		raise BadPolicyError("Couldn't find policy at " + policy_url)
 	elif output_text.startswith("404 Not Found") \
 		or output_text.startswith("403 Forbidden") \
 		or output_text.startswith("Forbidden") \
 		or output_text.startswith("%PDF-"):
-		raise NoPolicyError("Bad policy at " + policy_url)
+		raise BadPolicyError("Bad policy at " + policy_url)
+
+	policy_word_count = len(output_text.split())
+	if policy_word_count < 500:
+		raise BadPolicyError("Policy too short " + policy_url)
 
 	try:
 		f = open(file_name, "x")
@@ -118,7 +122,7 @@ class PolicySpider(scrapy.Spider):
 			try:
 				save_policy_text(link_to_policy, policy_file_name)
 				success = True
-			except NoPolicyError:
+			except BadPolicyError:
 				print("Error while pulling policy at " + link_to_policy)
 				success = False
 		else:
