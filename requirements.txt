@@ -1,0 +1,8 @@
+# Spider
+justext
+scrapy
+
+# Notebook (Assumes spider requirements are already installed)
+pandas
+matplotlib
+wordcloud
