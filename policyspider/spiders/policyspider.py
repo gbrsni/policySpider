@@ -76,6 +76,11 @@ class PolicySpider(scrapy.Spider):
 	start_urls = websites_file_json["websites"]
 	websites_file.close()
 
+	keywords_file = open("resources/policy_keywords.json", "r")
+	keywords_file_json = json.load(keywords_file)
+	xpath_query = make_xpath_query(keywords_file_json["keywords"])
+	keywords_file.close()
+
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
 
@@ -102,10 +107,7 @@ class PolicySpider(scrapy.Spider):
 
 		print("Parsing")
 
-		keywords_file = open("resources/policy_keywords.json", "r")
-		keywords_file_json = json.load(keywords_file)
-		link_to_policy = response.xpath(make_xpath_query(keywords_file_json["keywords"])).get()
-		keywords_file.close()
+		link_to_policy = response.xpath(xpath_query).get()
 		
 		success = False
 
