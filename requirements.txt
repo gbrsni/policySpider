@@ -1,6 +1,7 @@
 # Spider
 justext
 scrapy
+scrapy_selenium
 
 # Notebook (Assumes spider requirements are already installed)
 pandas
