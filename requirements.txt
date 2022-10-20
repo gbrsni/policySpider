@@ -2,6 +2,7 @@
 justext
 scrapy
 scrapy_selenium
+textract
 
 # Notebook (Assumes spider requirements are already installed)
 pandas
