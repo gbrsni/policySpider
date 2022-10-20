@@ -3,6 +3,8 @@ import os
 import requests
 import scrapy
 import json
+import textract
+import tempfile
 
 from scrapy_selenium import SeleniumRequest
 
@@ -12,6 +14,9 @@ DATADIR = "data"
 class BadPolicyError(Exception):
 	"""To be raised when no policy has been found"""
 	pass
+
+def get_text_from_pdf(pdf_file):
+	output_text = textract.process(pdf_file.name, extension = "pdf")
 
 def save_policy_text(policy_url, file_name):
 	"""Saves the policy found at the given URL to a text file with name file_name inside DATADIR"""
@@ -32,9 +37,13 @@ def save_policy_text(policy_url, file_name):
 		raise BadPolicyError("Couldn't find policy at " + policy_url)
 	elif output_text.startswith("404 Not Found") \
 		or output_text.startswith("403 Forbidden") \
-		or output_text.startswith("Forbidden") \
-		or output_text.startswith("%PDF-"):
+		or output_text.startswith("Forbidden"):
 		raise BadPolicyError("Bad policy at " + policy_url)
+	
+	if output_text.startswith("%PDF-"):
+		pdf_file = tempfile.TemporaryFile()
+		pdf_file.write(response.content)
+		output_text = get_text_from_pdf(pdf_file)
 
 	policy_word_count = len(output_text.split())
 	if policy_word_count < 500:
