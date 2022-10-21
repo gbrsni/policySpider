@@ -46,6 +46,8 @@ def save_policy_text(policy_url, file_name):
 		pdf_file.write(response.content)
 		output_text = get_text_from_pdf(pdf_file)
 		pdf_file.close()
+		if output_text == "" or output_text is None:
+			raise BadPolicyError("Couldn't find policy at " + policy_url)
 
 	policy_word_count = len(output_text.split())
 	if policy_word_count < 500:
