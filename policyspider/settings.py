@@ -12,7 +12,9 @@ BOT_NAME = 'policyspider'
 SPIDER_MODULES = ['policyspider.spiders']
 NEWSPIDER_MODULE = 'policyspider.spiders'
 
-LOG_LEVEL = logging.INFO
+import logging
+
+LOG_LEVEL = logging.DEBUG
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'policyspider (+http://www.yourdomain.com)'
