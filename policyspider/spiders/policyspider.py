@@ -130,7 +130,7 @@ class PolicySpider(scrapy.Spider):
 		
 		success = False
 
-		if link_to_policy is not None and link_to_policy != "javascript:void":
+		if link_to_policy is not None and not link_to_policy.startswith("javascript:void"):
 			print("Found a link to a privacy policy at " + link_to_policy)
 
 			if link_to_policy.startswith("//"): # Some websites do this for some reason
