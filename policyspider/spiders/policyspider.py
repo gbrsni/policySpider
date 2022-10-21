@@ -139,6 +139,10 @@ class PolicySpider(scrapy.Spider):
 				link_to_policy = "https://" + link_to_policy
 			elif link_to_policy.startswith("/"): # If relathive path is used
 				link_to_policy = "https://" + domain + link_to_policy
+			elif link_to_policy == "#":
+				link_to_policy = current_url
+			elif not link_to_policy.startswith("https://") and not link_to_policy.startswith("http://"): # Relative path not beginning with /
+				link_to_policy = "https://" + domain + "/" + link_to_policy
 
 			try:
 				save_policy_text(link_to_policy, policy_file_name)
