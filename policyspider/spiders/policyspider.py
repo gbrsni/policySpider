@@ -93,7 +93,7 @@ class PolicySpider(scrapy.Spider):
 		websites_file.close()
 		
 		for url in start_urls:
-			yield SeleniumRequest(url = url, callback=self.parse_aux)
+			yield SeleniumRequest(url = url, callback=self.parse)
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
@@ -107,7 +107,7 @@ class PolicySpider(scrapy.Spider):
 		f.write(response.css("*").get())
 		f.close()
 
-	def parse_aux(self, response):
+	def parse(self, response):
 		current_url = response.request.url
 		domain = get_domain_from_url(current_url)
 		policy_file_name = "policy_" + domain + ".txt"
