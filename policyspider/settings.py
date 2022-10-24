@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = 'policyspider.spiders'
 
 import logging
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'policyspider (+http://www.yourdomain.com)'
@@ -89,18 +89,3 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
-
-from shutil import which
-
-SELENIUM_DRIVER_NAME = 'firefox'
-
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('geckodriver')
-
-SELENIUM_DRIVER_ARGUMENTS=['-headless']
-
-DOWNLOADER_MIDDLEWARES = {
-
-    'scrapy_selenium.SeleniumMiddleware': 800
-
-}

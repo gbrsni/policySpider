@@ -6,7 +6,7 @@ import json
 import textract
 import tempfile
 
-from scrapy_selenium import SeleniumRequest
+from selenium import webdriver
 
 DATADIR = "data"
 
@@ -19,27 +19,53 @@ def get_text_from_pdf(pdf_file):
 	pdf_file_name = os.path.join(tempfile.gettempdir(), pdf_file.name)
 	output_text = textract.process(pdf_file_name)
 
-def save_policy_text(policy_url, file_name):
+def selenium_get_policy_from_url(url):
+	"""Returns the text found at url when opened with selenium"""
+	print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATrying selenium at " + url)
+
+	driver = webdriver.Firefox()
+	driver.get(url)
+	source = driver.page_source
+
+	driver.quit()
+
+	res = ""	
+	paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
+
+	for paragraph in paragraphs:
+		res += paragraph.text + " "
+
+	return res
+
+def save_policy_text(policy_url, file_name, source = ""):
 	"""Saves the policy found at the given URL to a text file with name file_name inside DATADIR"""
 	file_name = os.path.join(DATADIR, file_name)
 
 	print("Saving policy text to", file_name)
 
-	response = requests.get(policy_url)
+	if source == "":
+		response = requests.get(policy_url)
+		source = response.content
 
-	paragraphs = justext.justext(response.content, justext.get_stoplist("Italian"))
+	paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
 
 	output_text = ""
 
 	for paragraph in paragraphs:
 		output_text += paragraph.text + " "
 
-	if output_text == "" or output_text is None:
-		raise BadPolicyError("Couldn't find policy at " + policy_url)
-	elif output_text.startswith("404 Not Found") \
-		or output_text.startswith("403 Forbidden") \
-		or output_text.startswith("Forbidden"):
-		raise BadPolicyError("Bad policy at " + policy_url)
+	# if output_text == "" or output_text is None:
+	# 	output_text = selenium_get_policy_from_url(policy_url)
+
+	try:
+		if output_text == "" or output_text is None:
+			raise BadPolicyError("Couldn't find policy at " + policy_url)
+		elif output_text.startswith("404 Not Found") \
+			or output_text.startswith("403 Forbidden") \
+			or output_text.startswith("Forbidden"):
+			raise BadPolicyError("Bad policy at " + policy_url)
+	except BadPolicyError:
+		output_text = selenium_get_policy_from_url(policy_url)
 	
 	if output_text.startswith("%PDF-"):
 		pdf_file = tempfile.NamedTemporaryFile(suffix = ".pdf", prefix = "policy_")
@@ -93,7 +119,7 @@ class PolicySpider(scrapy.Spider):
 		websites_file.close()
 		
 		for url in start_urls:
-			yield SeleniumRequest(url = url, callback=self.parse)
+			yield scrapy.Request(url = url, callback=self.parse)
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
@@ -120,14 +146,13 @@ class PolicySpider(scrapy.Spider):
 			print("Data directory already present")
 
 		print("Parsing")
-
 		keywords_file = open("resources/policy_keywords.json", "r")
 		keywords_file_json = json.load(keywords_file)
 		xpath_query = make_xpath_query(keywords_file_json["keywords"])
 		keywords_file.close()
 
 		link_to_policy = response.selector.xpath(xpath_query).get()
-		
+
 		success = False
 
 		if link_to_policy is not None and not link_to_policy.startswith("javascript:void"):
