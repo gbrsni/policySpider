@@ -5,6 +5,7 @@ import scrapy
 import json
 import textract
 import tempfile
+import time
 
 from selenium import webdriver
 
@@ -25,6 +26,7 @@ def selenium_get_policy_from_url(url):
 
 	driver = webdriver.Firefox()
 	driver.get(url)
+	time.sleep(5)
 	source = driver.page_source
 
 	driver.quit()
