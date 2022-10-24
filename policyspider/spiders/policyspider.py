@@ -42,18 +42,18 @@ def selenium_get_policy_from_url(url):
 def policy_text_is_good(policy_text):
 	"""Returns true if the input text is considered good.
 	Returns false and what the problems is if a problem is found"""
-	if output_text == "" or output_text is None:
-		print("Couldn't find policy at " + policy_url)
+	if policy_text == "" or policy_text is None:
+		print("Couldn't find policy text")
 		return False
-	elif output_text.startswith("404 Not Found") \
-		or output_text.startswith("403 Forbidden") \
-		or output_text.startswith("Forbidden"):
-		print("Bad policy at " + policy_url)
+	elif policy_text.startswith("404 Not Found") \
+		or policy_text.startswith("403 Forbidden") \
+		or policy_text.startswith("Forbidden"):
+		print("Bad policy (Error)")
 		return False
 
-	policy_word_count = len(output_text.split())
+	policy_word_count = len(policy_text.split())
 	if policy_word_count < 500:
-		print("Policy too short " + policy_url)
+		print("Policy too short")
 		return False
 
 	return True
