@@ -67,6 +67,7 @@ def save_policy_text(policy_url, file_name):
 	output_text = ""
 
 	if policy_url.split(".")[len(policy_url.split(".")) - 1] == "pdf":
+		print("Policy may be a pdf file, attempting to extract plain text")
 		pdf_file = tempfile.NamedTemporaryFile(suffix = ".pdf", prefix = "policy_")
 		pdf_file.write(response.content)
 		output_text = get_text_from_pdf(pdf_file)
