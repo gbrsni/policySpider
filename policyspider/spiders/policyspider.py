@@ -39,22 +39,27 @@ def selenium_get_policy_from_url(url):
 
 	return res
 
-def save_policy_text(policy_url, file_name, source = ""):
+def save_policy_text(policy_url, file_name):
 	"""Saves the policy found at the given URL to a text file with name file_name inside DATADIR"""
 	file_name = os.path.join(DATADIR, file_name)
 
 	print("Saving policy text to", file_name)
 
-	if source == "":
+	output_text = ""
+
+	if policy_url.split(".")[len(policy_url.split(".")) - 1] == "pdf":
+		pdf_file = tempfile.NamedTemporaryFile(suffix = ".pdf", prefix = "policy_")
+		pdf_file.write(response.content)
+		output_text = get_text_from_pdf(pdf_file)
+		pdf_file.close()
+	else:
 		response = requests.get(policy_url)
 		source = response.content
 
-	paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
+		paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
 
-	output_text = ""
-
-	for paragraph in paragraphs:
-		output_text += paragraph.text + " "
+		for paragraph in paragraphs:
+			output_text += paragraph.text + " "
 
 	try:
 		if output_text == "" or output_text is None:
