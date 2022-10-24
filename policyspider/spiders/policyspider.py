@@ -21,7 +21,7 @@ def get_text_from_pdf(pdf_file):
 
 def selenium_get_policy_from_url(url):
 	"""Returns the text found at url when opened with selenium"""
-	print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATrying selenium at " + url)
+	print("Trying selenium at " + url)
 
 	driver = webdriver.Firefox()
 	driver.get(url)
