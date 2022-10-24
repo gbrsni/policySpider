@@ -83,6 +83,9 @@ def save_policy_text(policy_url, file_name):
 
 	if not policy_text_is_good(output_text):
 		output_text = selenium_get_policy_from_url(policy_url)
+	
+	if not policy_text_is_good(output_text):
+		raise BadPolicyError("No viable policy found at " + policy_url)
 
 	try:
 		f = open(file_name, "x")
