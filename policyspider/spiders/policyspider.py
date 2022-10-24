@@ -56,9 +56,6 @@ def save_policy_text(policy_url, file_name, source = ""):
 	for paragraph in paragraphs:
 		output_text += paragraph.text + " "
 
-	# if output_text == "" or output_text is None:
-	# 	output_text = selenium_get_policy_from_url(policy_url)
-
 	try:
 		if output_text == "" or output_text is None:
 			raise BadPolicyError("Couldn't find policy at " + policy_url)
@@ -66,20 +63,21 @@ def save_policy_text(policy_url, file_name, source = ""):
 			or output_text.startswith("403 Forbidden") \
 			or output_text.startswith("Forbidden"):
 			raise BadPolicyError("Bad policy at " + policy_url)
+	
+		if output_text.startswith("%PDF-"):
+			pdf_file = tempfile.NamedTemporaryFile(suffix = ".pdf", prefix = "policy_")
+			pdf_file.write(response.content)
+			output_text = get_text_from_pdf(pdf_file)
+			pdf_file.close()
+			if output_text == "" or output_text is None:
+				raise BadPolicyError("Couldn't find policy at " + policy_url)
+
+		policy_word_count = len(output_text.split())
+		if policy_word_count < 500:
+			raise BadPolicyError("Policy too short " + policy_url)
+
 	except BadPolicyError:
 		output_text = selenium_get_policy_from_url(policy_url)
-	
-	if output_text.startswith("%PDF-"):
-		pdf_file = tempfile.NamedTemporaryFile(suffix = ".pdf", prefix = "policy_")
-		pdf_file.write(response.content)
-		output_text = get_text_from_pdf(pdf_file)
-		pdf_file.close()
-		if output_text == "" or output_text is None:
-			raise BadPolicyError("Couldn't find policy at " + policy_url)
-
-	policy_word_count = len(output_text.split())
-	if policy_word_count < 500:
-		raise BadPolicyError("Policy too short " + policy_url)
 
 	try:
 		f = open(file_name, "x")
