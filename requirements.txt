@@ -8,3 +8,5 @@ textract
 pandas
 matplotlib
 wordcloud
+text2emotion
+emoji==1.6.3
