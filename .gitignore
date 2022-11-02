@@ -1,4 +1,14 @@
-__pycache__
+# Project specific
 data
+
+# Python/Jupyter
+__pycache__
 .ipynb_checkpoints
+
+# Misc
 geckodriver
+geckodriver.log
+
+req.txt
+getwebsites.py
+customsettings.py
