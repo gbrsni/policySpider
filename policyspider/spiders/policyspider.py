@@ -41,7 +41,7 @@ def selenium_get_policy_from_url(url):
 
 def policy_text_is_good(policy_text):
 	"""Returns true if the input text is considered good.
-	Returns false and what the problems is if a problem is found"""
+	Returns false and prints what the problems is if a problem is found"""
 	if policy_text == "" or policy_text is None:
 		print("Couldn't find policy text")
 		return False
