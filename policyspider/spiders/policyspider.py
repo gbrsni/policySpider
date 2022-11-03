@@ -8,6 +8,7 @@ import tempfile
 import time
 
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 
 DATADIR = "data"
 
@@ -23,8 +24,10 @@ def get_text_from_pdf(pdf_file):
 def selenium_get_policy_from_url(url):
 	"""Returns the text found at url when opened with selenium"""
 	print("Trying selenium at " + url)
-
-	driver = webdriver.Firefox()
+	
+	options = Options()
+	options.headless = True
+	driver = webdriver.Firefox(options=options)
 	driver.get(url)
 	time.sleep(5)
 	source = driver.page_source
