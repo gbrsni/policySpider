@@ -38,7 +38,7 @@ def selenium_get_policy_from_url(url):
 	paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
 
 	for paragraph in paragraphs:
-		res += paragraph.text + " "
+		res = res + paragraph.text + " "
 
 	return res
 
@@ -83,13 +83,13 @@ def save_policy_text(policy_url, file_name):
 		paragraphs = justext.justext(source, justext.get_stoplist("Italian"))
 
 		for paragraph in paragraphs:
-			output_text += paragraph.text + " "
+			output_text = output_text + paragraph.text + " "
 
 	if not policy_text_is_good(output_text):
 		output_text = selenium_get_policy_from_url(policy_url)
 	
-	if not policy_text_is_good(output_text):
-		raise BadPolicyError("No viable policy found at " + policy_url)
+	# if not policy_text_is_good(output_text):
+	# 	raise BadPolicyError("No viable policy found at " + policy_url)
 
 	try:
 		f = open(file_name, "x")
