@@ -190,11 +190,14 @@ class PolicySpider(scrapy.Spider):
 		else:
 			link_to_policy = None
 			success = False
+		
+		uses_iubenda = "cdn.iubenda.com" in response.text
 
 		yield {
 			"url" : current_url,
 			"policy_domain" : get_domain_from_url(link_to_policy),
 			"policy_url" : link_to_policy,
 			"policy_file" : policy_file_name,
+			"uses_iubenda" : uses_iubenda,
 			"success" : success
 		}
