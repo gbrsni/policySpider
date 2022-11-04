@@ -20,6 +20,7 @@ class BadPolicyError(Exception):
 def get_text_from_pdf(pdf_file):
 	pdf_file_name = os.path.join(tempfile.gettempdir(), pdf_file.name)
 	output_text = textract.process(pdf_file_name)
+	return output_text
 
 def selenium_get_policy_from_url(url):
 	"""Returns the text found at url when opened with selenium"""
