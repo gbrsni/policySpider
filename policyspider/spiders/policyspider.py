@@ -1,5 +1,6 @@
 import justext
 import os
+import pandas as pd
 import requests
 import scrapy
 import json
@@ -115,6 +116,18 @@ def get_domain_from_url(url):
 		return None
 	return url.split("/")[2]
 
+def websites_from_csv():
+	csv = pd.read_csv("resources/websites.csv")
+	domains = csv['url'].tolist()
+	urls = []
+	for domain in domains:
+		if not domain.startswith("https://") or domain.startswith("http://"):
+			urls.append("https://" + domain)
+		else:
+			urls.append(domain)
+	return urls
+
+
 class PolicySpider(scrapy.Spider):
 	name = "policyspider"
 
@@ -126,10 +139,12 @@ class PolicySpider(scrapy.Spider):
 	}
 
 	def start_requests(self):
-		websites_file = open("resources/websites.json", "r")
-		websites_file_json = json.load(websites_file)
-		start_urls = websites_file_json["websites"]
-		websites_file.close()
+		# websites_file = open("resources/websites.json", "r")
+		# websites_file_json = json.load(websites_file)
+		# start_urls = websites_file_json["websites"]
+		# websites_file.close()
+
+		start_urls = websites_from_csv()
 		
 		for url in start_urls:
 			yield scrapy.Request(url = url, callback=self.parse)
