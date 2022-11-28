@@ -16,6 +16,8 @@ import logging
 
 LOG_LEVEL = logging.INFO
 
+DOWNLOAD_TIMEOUT = 18
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'policyspider (+http://www.yourdomain.com)'
 
