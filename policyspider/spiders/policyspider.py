@@ -90,8 +90,8 @@ def save_policy_text(policy_url, file_name):
 	if not policy_text_is_good(output_text):
 		output_text = selenium_get_policy_from_url(policy_url)
 	
-	# if not policy_text_is_good(output_text):
-	# 	raise BadPolicyError("No viable policy found at " + policy_url)
+	if not policy_text_is_good(output_text):
+		raise BadPolicyError("No viable policy found at " + policy_url)
 
 	try:
 		f = open(file_name, "x")
@@ -215,5 +215,6 @@ class PolicySpider(scrapy.Spider):
 			"policy_url" : link_to_policy,
 			"policy_file" : policy_file_name,
 			"uses_iubenda" : uses_iubenda,
-			"success" : success
+			"success" : success,
+			"ignore" : False,
 		}
