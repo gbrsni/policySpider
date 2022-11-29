@@ -1,12 +1,12 @@
 # Spider
 justext
-numpy
 scrapy
 textract
 
 # Notebook (Assumes spider requirements are already installed)
 pandas
 matplotlib
+numpy
 wordcloud
 text2emotion
 emoji==1.6.3
