@@ -12,6 +12,9 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
 DATADIR = "data"
+CSV_WEBSITES_FILE_NAME = "allsites.csv"
+JSON_WEBSITES_FILE_NAME = "resources/websites.json"
+KEYWORS_FILE_NAME = "resources/policy_keywords.json"
 
 
 class BadPolicyError(Exception):
@@ -117,7 +120,8 @@ def get_domain_from_url(url):
 	return url.split("/")[2]
 
 def websites_from_csv():
-	csv = pd.read_csv("resources/websites.csv")
+	csv_file_path = os.path.join("resources", CSV_WEBSITES_FILE_NAME)
+	csv = pd.read_csv(csv_file_path)
 	domains = csv['url'].tolist()
 	urls = []
 	for domain in domains:
@@ -125,6 +129,9 @@ def websites_from_csv():
 			urls.append("https://" + domain)
 		else:
 			urls.append(domain)
+
+	print("Loaded " + str(len(urls)) + " websites")
+	
 	return urls
 
 
@@ -139,7 +146,7 @@ class PolicySpider(scrapy.Spider):
 	}
 
 	def start_requests(self):
-		# websites_file = open("resources/websites.json", "r")
+		# websites_file = open(JSON_WEBSITES_FILE_NAME, "r")
 		# websites_file_json = json.load(websites_file)
 		# start_urls = websites_file_json["websites"]
 		# websites_file.close()
@@ -174,7 +181,7 @@ class PolicySpider(scrapy.Spider):
 			print("Data directory already present")
 
 		print("Parsing")
-		keywords_file = open("resources/policy_keywords.json", "r")
+		keywords_file = open(KEYWORS_FILE_NAME, "r")
 		keywords_file_json = json.load(keywords_file)
 		xpath_query = make_xpath_query(keywords_file_json["keywords"])
 		keywords_file.close()
