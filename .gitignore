@@ -2,6 +2,7 @@
 data
 resources/websites.csv
 resources/websites_pa.csv
+resources/allsites.csv
 
 # Python/Jupyter
 __pycache__
