@@ -10,6 +10,7 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from twisted.internet.error import DNSLookupError
 
 DATADIR = "data"
 RESOURCES_DIR = "resources"
@@ -146,16 +147,20 @@ class PolicySpider(scrapy.Spider):
 		}
 	}
 
+	start_urls = []
+
 	def start_requests(self):
 		# websites_file = open(os.path.join(RESOURCES_DIR, JSON_WEBSITES_FILE_NAME), "r")
 		# websites_file_json = json.load(websites_file)
 		# start_urls = websites_file_json["websites"]
 		# websites_file.close()
 
-		start_urls = websites_from_csv()
+		self.start_urls = websites_from_csv()
 		
-		for url in start_urls:
-			yield scrapy.Request(url = url, callback=self.parse)
+		for url in self.start_urls:
+			yield scrapy.Request(url = url,
+				callback=self.parse,
+				errback=self.parse_err)
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
@@ -226,3 +231,8 @@ class PolicySpider(scrapy.Spider):
 			"success" : success,
 			"ignore" : False,
 		}
+	
+	def parse_err(self, failure):
+		if failure.check(DNSLookupError):
+			print("Trying to add www. to " + request.url)
+			self.start_urls.append("www." + request.url)
