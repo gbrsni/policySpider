@@ -159,8 +159,8 @@ class PolicySpider(scrapy.Spider):
 		
 		for url in self.start_urls:
 			yield scrapy.Request(url = url,
-				callback=self.parse,
-				errback=self.parse_err)
+				callback = self.parse,
+				errback = self.parse_err)
 
 	def save_policy_html(self, response, file_name = "policy"):
 		file_name = DATADIR + file_name + ".html"
