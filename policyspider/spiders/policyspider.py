@@ -238,5 +238,6 @@ class PolicySpider(scrapy.Spider):
 	def parse_err(self, failure):
 		if failure.check(DNSLookupError):
 			request = failure.request
-			print("Trying to add www. to " + request.url)
-			self.start_urls.append("www." + request.url)
+			if not request.url.startswith("www."):
+				print("Trying to add www. to " + request.url)
+				self.start_urls.append("www." + request.url)
