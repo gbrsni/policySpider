@@ -183,13 +183,13 @@ class PolicySpider(scrapy.Spider):
 		policy_file_name = "policy_" + domain + ".txt"
 		self.logger.info("Examining " + domain)
 
-		self.logger.info("Setting up data directory")
+		self.logger.debug("Setting up data directory")
 		try:
 			os.mkdir(DATADIR)
 		except FileExistsError:
-			self.logger.info("Data directory already present")
+			self.logger.debug("Data directory already present")
 
-		self.logger.info("Parsing")
+		self.logger.debug("Parsing")
 		keywords_file = open(os.path.join(RESOURCES_DIR, KEYWORS_FILE_NAME), "r")
 		keywords_file_json = json.load(keywords_file)
 		xpath_query = make_xpath_query(keywords_file_json["keywords"])
