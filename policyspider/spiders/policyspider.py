@@ -173,7 +173,7 @@ class PolicySpider(scrapy.Spider):
 		except FileExistsError:
 			f = open(file_name, "w")
 
-		print("Saving html")
+		self.logger.info("Saving html")
 		f.write(response.css("*").get())
 		f.close()
 
@@ -181,15 +181,15 @@ class PolicySpider(scrapy.Spider):
 		current_url = response.request.url
 		domain = get_domain_from_url(current_url)
 		policy_file_name = "policy_" + domain + ".txt"
-		print("Examining " + domain)
+		self.logger.info("Examining " + domain)
 
-		print("Setting up data directory")
+		self.logger.info("Setting up data directory")
 		try:
 			os.mkdir(DATADIR)
 		except FileExistsError:
-			print("Data directory already present")
+			self.logger.info("Data directory already present")
 
-		print("Parsing")
+		self.logger.info("Parsing")
 		keywords_file = open(os.path.join(RESOURCES_DIR, KEYWORS_FILE_NAME), "r")
 		keywords_file_json = json.load(keywords_file)
 		xpath_query = make_xpath_query(keywords_file_json["keywords"])
@@ -200,7 +200,7 @@ class PolicySpider(scrapy.Spider):
 		success = False
 
 		if link_to_policy is not None and not link_to_policy.startswith("javascript:void"):
-			print("Found a link to a privacy policy at " + link_to_policy)
+			self.logger.info("Found a link to a privacy policy at " + link_to_policy)
 
 			if link_to_policy.startswith("//"): # Some websites do this for some reason
 				link_to_policy = "https:" + link_to_policy
@@ -217,7 +217,7 @@ class PolicySpider(scrapy.Spider):
 				save_policy_text(link_to_policy, policy_file_name)
 				success = True
 			except BadPolicyError:
-				print("Error while pulling policy at " + link_to_policy)
+				self.logger.warn("Error while pulling policy at " + link_to_policy)
 				success = False
 		else:
 			link_to_policy = None
@@ -238,6 +238,10 @@ class PolicySpider(scrapy.Spider):
 	def parse_err(self, failure):
 		if failure.check(DNSLookupError):
 			request = failure.request
-			if not request.url.startswith("www."):
-				print("Trying to add www. to " + request.url)
-				self.start_urls.append("www." + request.url)
+			domain = request.url[len("https://"):]
+			# if not domain.startswith("www."):
+			self.logger.warn("Trying to add www. to " + domain)
+			# self.start_urls.append("www." + request.url)
+			url = "www." + domain
+			yield scrapy.Request(url = "https://" + url,
+				callback = self.parse)
