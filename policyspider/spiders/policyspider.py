@@ -10,7 +10,7 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from twisted.internet.error import DNSLookupError
+from twisted.internet.error import DNSLookupError, SSLError
 
 DATADIR = "data"
 RESOURCES_DIR = "resources"
@@ -244,4 +244,11 @@ class PolicySpider(scrapy.Spider):
 			# self.start_urls.append("www." + request.url)
 			url = "www." + domain
 			yield scrapy.Request(url = "https://" + url,
+				callback = self.parse)
+		elif failure.check(SSLError):
+			request = failure.request
+			domain = request.url[len("https://"):]
+
+			self.logger.warn("Trying to use http on " + domain)
+			yield scrapy.Request(url = "http://" + domain,
 				callback = self.parse)
