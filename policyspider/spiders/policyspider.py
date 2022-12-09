@@ -106,7 +106,7 @@ def save_policy_text(policy_url, file_name):
 	except FileExistsError:
 		f = open(file_name, "w")
 
-	f.write(output_text)
+	f.write(str(output_text))
 	f.close()
 
 # xpath structure "//a[contains(., 'privacy') or contains(., 'Policy')]/@href"
