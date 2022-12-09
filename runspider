@@ -1,0 +1,2 @@
+#!/bin/bash
+scrapy crawl policyspider -O data/crawl_report.json > log.log 2>&1
