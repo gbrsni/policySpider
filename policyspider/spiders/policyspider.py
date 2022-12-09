@@ -252,7 +252,8 @@ class PolicySpider(scrapy.Spider):
 
 			self.logger.warn("Trying to use http on " + domain)
 			yield scrapy.Request(url = "http://" + domain,
-				callback = self.parse)
+				callback = self.parse,
+				errback = self.parse_err_yield)
 
 	def parse_err_sslonly(self, failure):
 		if failure.check(SSLError):
@@ -261,4 +262,18 @@ class PolicySpider(scrapy.Spider):
 
 			self.logger.warn("Trying to use http on " + domain)
 			yield scrapy.Request(url = "http://" + domain,
-				callback = self.parse)
+				callback = self.parse,
+				errback = self.parse_err_yield)
+
+	def parse_err_yield(self):
+		domain = get_domain_from_url(request.url)
+
+		yield {
+			"url" : request.url,
+			"policy_domain" : "",
+			"policy_url" : "",
+			"policy_file" : "policy_" + domain + ".txt",
+			"uses_iubenda" : False,
+			"success" : False,
+			"ignore" : False,
+		}
