@@ -244,8 +244,18 @@ class PolicySpider(scrapy.Spider):
 			# self.start_urls.append("www." + request.url)
 			url = "www." + domain
 			yield scrapy.Request(url = "https://" + url,
-				callback = self.parse)
+				callback = self.parse,
+				errback = self.parse_err_sslonly)
 		elif failure.check(SSLError):
+			request = failure.request
+			domain = request.url[len("https://"):]
+
+			self.logger.warn("Trying to use http on " + domain)
+			yield scrapy.Request(url = "http://" + domain,
+				callback = self.parse)
+
+	def parse_err_sslonly(self, failure):
+		if failure.check(SSLError):
 			request = failure.request
 			domain = request.url[len("https://"):]
 
