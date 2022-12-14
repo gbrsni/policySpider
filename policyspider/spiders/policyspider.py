@@ -14,8 +14,8 @@ from twisted.internet.error import DNSLookupError, SSLError
 
 DATADIR = "data"
 RESOURCES_DIR = "resources"
-CSV_WEBSITES_FILE_NAME = "allsites.csv"
-JSON_WEBSITES_FILE_NAME = "websites.json"
+CSV_WEBSITES_FILE_NAME = "finalsites.csv"
+# JSON_WEBSITES_FILE_NAME = "websites.json"
 KEYWORS_FILE_NAME = "policy_keywords.json"
 
 
