@@ -4,6 +4,7 @@ resources/websites.csv
 resources/websites_pa.csv
 resources/allsites.csv
 *.log
+images
 
 # Python/Jupyter
 __pycache__
